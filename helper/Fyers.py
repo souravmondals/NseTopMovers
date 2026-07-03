@@ -91,5 +91,29 @@ def get_Stock_Depth(StockName):
 
     return response["d"][f"NSE:{StockName + Stype}"]
     
+def get_Stock_Quotes(StockName):
+    access_token = get_token()
+    fyers = fyersModel.FyersModel(
+        client_id=APPID,
+        token= access_token,
+        is_async=False
+    )
 
+    Stype ="-EQ"
+    #Stype ="30JUNFUT"
+    data = {
+        "symbols": "NSE:RELIANCE-EQ"   # Single stock
+    }   
+    response = fyers.quotes(data={"symbols": f"NSE:{StockName + Stype}"})
+
+    if response["message"]=="Please provide valid token":
+        access_token = generate_token()
+        fyers = fyersModel.FyersModel(
+            client_id=APPID,
+            token= access_token,
+            is_async=False
+        )
+        response = fyers.quotes(data={"symbols": f"NSE:{StockName + Stype}"})
+
+    return response["d"][f"NSE:{StockName + Stype}"]
 

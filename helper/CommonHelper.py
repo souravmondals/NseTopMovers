@@ -41,6 +41,6 @@ def get_all_FutureList()->list:
     #print(df.columns.tolist())
     #print(df.head())
     # Get all stock names
-    fno_stocks = df['SYMBOL    '].dropna().unique().tolist()
+    fno_stocks = df['SYMBOL'].dropna().unique().tolist()
    
     return fno_stocks

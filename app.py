@@ -3,7 +3,7 @@ import sys
 import time
 import subprocess
 from datetime import datetime
-from helper import CommonHelper
+from helper import CommonHelper, StockDetails
 from module import ManageExcel
 from config import config
  
@@ -13,7 +13,7 @@ import xlwings as xw
  
 # ── Configuration ─────────────────────────────────────────────
 OUTPUT_PATH = config["Excel-file-path"]  # <-- Change this path
-REFRESH_INTERVAL = 120  # seconds (2 minutes)
+REFRESH_INTERVAL = 240  # seconds (4 minutes)
 # ──────────────────────────────────────────────────────────────
  
 
@@ -34,6 +34,7 @@ if not CommonHelper.is_file_open(OUTPUT_PATH):
  
 # Update data (handles both fresh file and already-open file)
 print(f"[{datetime.now().strftime('%H:%M:%S')}] Writing data to Excel...")
+StockDetails.add_fno_stock_data(OUTPUT_PATH, All_Future_Stocks)
 CommonHelper.fetch_data(OUTPUT_PATH, All_Future_Stocks)
 print(f"Done. Next refresh in {REFRESH_INTERVAL // 60} min. Press Ctrl+C to stop.\n")
  
@@ -42,6 +43,7 @@ while True:
     try:
         print(f"[{datetime.now().strftime('%H:%M:%S')}] Refreshing NSE data...")     
         CommonHelper.fetch_data(OUTPUT_PATH, All_Future_Stocks)
+        StockDetails.add_fno_stock_data(OUTPUT_PATH, All_Future_Stocks)
         print(f"Updated. Next refresh in {REFRESH_INTERVAL // 60} min.\n")
     except KeyboardInterrupt:
         print("Stopped.")
